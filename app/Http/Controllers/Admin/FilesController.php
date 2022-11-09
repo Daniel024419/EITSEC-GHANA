@@ -85,11 +85,17 @@ class FilesController extends Controller
             return abort(401);
         }
         
-            $request = $this->saveFiles($request);
-
+               $request = $this->saveFiles($request);
             $data = $request->all();
-            $fileIds = $request->input('filename_id');
+            
+            $fileId1 = $request->input('filename_id');
+            $fileId2 = $request->input('name');
+            $fileId3 = $request->input('contact');
+            $fileId4 = $request->input('email');
+            $fileIds=array($fileId1,$fileId2,$fileId3,$fileId4);
 
+            if (is_array($fileIds) || is_object($fileIds))
+            {
             foreach ($fileIds as $fileId) {
                 $file = File::create([
                     'id' => $fileId,
@@ -97,14 +103,12 @@ class FilesController extends Controller
                     'folder_id' => $request->input('folder_id'),
                      'name' => $request->input('name'),
                     'contact' => $request->input('contact'),
-                     'email' => $request->input('email'),
-
-                   
+                     'email' => $request->input('email'),         
                     'created_by_id' => Auth::getUser()->id
 
                 ]);
             }
-
+        }
 
             foreach ($request->input('filename_id', []) as $index => $id) {
                 $model = config('media-library.media_model');
